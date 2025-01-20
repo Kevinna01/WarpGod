@@ -19,13 +19,9 @@ Tailor-made mod for personal use to make my OP build viable.
 ## **Disclaimer**
 - **Bugs**  
   - Possible to still explode with Assail, if spam-throwing knives while just below 100% peril.
-  - Transition between preventing & allowing inputs cancels holding-down inputs (so you gotto repress the button)
 
 - **Warp Unbound Bug Fix**  
   - Default settings values is what worked for me
-  - There's can still still persist a small probability of the bug occurring.  
+  - There's might still persist a small probability of the bug occurring, am not sure how to replicate, but with version 2.0 I have have not yet encounted the bug, so it should be reliable.
   - You can tweak the settings to potentially find better values.
-## **Build I made this mod for**
-I was exploring how to make the most broken build while skirting around the ToS with mods and macros, this is what I came up with.
-  - ![alt text](https://github.com/Kevinna01/WarpGod/blob/main/Build.png?raw=true)
 

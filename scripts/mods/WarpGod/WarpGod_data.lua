@@ -46,7 +46,7 @@ return {
                         setting_id      = "debounce_enter_percentage",
                         type            = "numeric",
                         range           = { 0.9, 1.0 },
-                        default_value   = 0.95,
+                        default_value   = 0.96,
                         decimals_number = 2,
                         step_size_value = 0.01,
                         text            = mod:localize("debounce_enter_percentage"),
@@ -61,6 +61,59 @@ return {
                         step_size_value = 0.1,
                         text            = mod:localize("debounce_exit_time"),
                         description     = mod:localize("debounce_exit_time_description"),
+                    },
+                },
+            },
+            -- Auto Quell Group
+            {
+                setting_id = "auto_quell",
+                type = "group",
+                sub_widgets = {
+                    {
+                        setting_id    = "auto_quell_enable",
+                        type          = "checkbox",
+                        default_value = false,
+                        text          = mod:localize("auto_quell_enable"),
+                        description   = mod:localize("auto_quell_enable_description"),
+                    },
+                    {
+                        setting_id      = "auto_quell_threshold",
+                        type            = "numeric",
+                        range           = { 0.0, 1.0 },
+                        default_value   = 0.95,
+                        decimals_number = 2,
+                        step_size_value = 0.01,
+                        text            = mod:localize("auto_quell_threshold"),
+                        description   = mod:localize("auto_quell_threshold_description"),
+                    },
+                    {
+                        setting_id      = "auto_quell_duration",
+                        type            = "numeric",
+                        range           = { 0.0, 2.5 },
+                        default_value   = 1.0,
+                        decimals_number = 2,
+                        step_size_value = 0.1,
+                        text            = mod:localize("auto_quell_duration"),
+                        description   = mod:localize("auto_quell_duration_description"),
+                    },
+                },
+            },
+            -- Auto Ability Activation
+            {
+                setting_id = "auto_ability",
+                type = "group",
+                sub_widgets = {
+                    {
+                        setting_id    = "auto_gaze_enable",
+                        type          = "checkbox",
+                        default_value = false,
+                        text          = mod:localize("auto_gaze_enable"),
+                    },
+                    {
+                        setting_id    = "auto_vent_enable",
+                        type          = "checkbox",
+                        default_value = false,
+                        text          = mod:localize("auto_vent_enable"),
                     },
                 },
             },

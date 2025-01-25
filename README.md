@@ -10,3 +10,9 @@ _By a psyker, for the psykers_
   
 - **Prevent Peril of the Warp Explosion**
   - Prevents explosions by disabling additional inputs which would generate peril when at 100% peril.
+
+- **Auto Quelling**
+
+- **Auto Warp Unbound activation**
+
+- **Venting Shriek activation**

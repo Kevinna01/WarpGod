@@ -17,6 +17,15 @@ local perilous_attacks_disabled = false
 local warp_unbound_buff_active = false
 local current_peril = 0
 local warp_unbound_equipped = false
+local venting_shriek_equipped = false
+local timer = 0
+
+local perilous_action_sent = false
+local quell_time_remaining = 0
+local quell_active = false
+
+local auto_ability_activation = true
+local auto_unbound_time = 0.4
 
 local perilous_weapons = {
     "forcestaff_p4_m1",
@@ -45,12 +54,16 @@ local forceswords = {
 local peril_threshold = mod:get("peril_threshold")
 local debounce_enter_percentage = mod:get("debounce_enter_percentage")
 local debounce_exit_time = mod:get("debounce_exit_time")
+local auto_quell_threshold = mod:get("auto_quell_threshold")
+local auto_quell_duration = mod:get("auto_quell_duration")
 
 -- Update settings when they change
 mod.on_setting_changed = function(setting_id)
     peril_threshold = mod:get("peril_threshold")
     debounce_enter_percentage = mod:get("debounce_enter_percentage")
     debounce_exit_time = mod:get("debounce_exit_time")
+    auto_quell_threshold = mod:get("auto_quell_threshold")
+    auto_quell_duration = mod:get("auto_quell_duration")
 end
 
 -- Function to get the local player
@@ -123,7 +136,7 @@ local function state_debounce()
     local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
     local remaining_time = 0
     if buff_extension then
-        local timer = 0
+        timer = 0
         for _, buff in pairs(buff_extension:buffs()) do
             local template = buff:template()
             if template.name == "psyker_overcharge_stance_infinite_casting" then
@@ -165,6 +178,26 @@ local function update_equipped_ability_status()
     else
         warp_unbound_equipped = false
     end
+
+    local has_venting_shriek_talent = profile.talents['psyker_shout_vent_warp_charge'] or 0
+    if has_venting_shriek_talent == 1 then
+        venting_shriek_equipped = true
+    else
+        venting_shriek_equipped = false
+    end
+end
+
+local function attack_to_quell(dt)
+    if perilous_action_sent then
+        perilous_action_sent = false
+        quell_time_remaining = auto_quell_duration
+    end
+    if quell_time_remaining > 0 then
+        quell_time_remaining = quell_time_remaining - dt
+        quell_active = true
+    else
+        quell_active = false
+    end
 end
 
 -- Hook into PlayerUnitAbilityExtension to confirm ability is actually used
@@ -190,6 +223,7 @@ mod:hook("InputService", "_get", function(func, self, action_name)
         action_name ~= "weapon_reload" and
         action_name ~= "weapon_reload_hold" and
         action_name ~= "pressed" and
+        action_name ~= "combat_ability_pressed" and
         action_name ~= "combat_ability_hold" and
         action_name ~= "combat_ability_release"
     then
@@ -205,6 +239,29 @@ mod:hook("InputService", "_get", function(func, self, action_name)
     if waiting_on_buff and warp_unbound_buff_active and warp_unbound_equipped then
         waiting_on_buff = false
     end
+
+    if mod:get("auto_quell_enable") and (current_peril > auto_quell_threshold) and perilous_action_sent == false and is_perilous_weapon and (not waiting_on_buff) and (not warp_unbound_buff_active) then
+        perilous_action_sent = true
+    end
+
+    -- Auto Ability Activation
+    if action_name == "combat_ability_pressed" and auto_ability_activation then
+        if mod:get("auto_gaze_enable") and warp_unbound_equipped and warp_unbound_buff_active and (timer < auto_unbound_time) then
+            attempted_ability_usage = true
+            return true
+        end
+        --This implementation might not work if using bubble
+        if mod:get("auto_vent_enable") and venting_shriek_equipped and current_peril > peril_threshold then
+            attempted_ability_usage = true
+            return true
+        end
+    end
+
+    -- Auto Quell Functionality
+    if action_name == "weapon_reload_hold" and quell_active == true then
+        return true
+    end
+
 
     -- Prevent Psyker Explosion functionality
     if mod:get("prevent_psyker_explosion_enable") and (current_peril >= peril_threshold) and not waiting_on_buff and not warp_unbound_buff_active then
@@ -237,9 +294,19 @@ mod:hook("InputService", "_get", function(func, self, action_name)
         if is_forcesword and (action_name == "weapon_extra_pressed" or action_name == "weapon_extra_hold" or action_name == "weapon_extra_release") then
             return false
         end
+        
+        
+        -- Disable Reload/Quell when Warp Unbound is active
+        if (current_peril > 0.99) and waiting_on_buff and (action_name == "weapon_reload" or action_name == "weapon_reload_hold") then
+            return false
+        end
     end
 
     return func(self, action_name)
 end)
+
+function mod.update(dt)
+    attack_to_quell(dt)
+end
 
 return mod

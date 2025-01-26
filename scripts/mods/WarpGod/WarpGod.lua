@@ -30,7 +30,7 @@ local auto_unbound_time = 0.4
 local perilous_weapons = {
     "forcestaff_p4_m1",
     "forcestaff_p3_m1",
-    --"forcestaff_p2_m1",
+    "forcestaff_p2_m1",
     "forcestaff_p1_m1",
     "psyker_throwing_knives",
     "psyker_smite",

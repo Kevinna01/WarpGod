@@ -9,13 +9,11 @@ _By a psyker, for the psykers_
  
 ## **Bugs**
 - **Exiting Warp Unbound risk of explosion**
-  - In version older than 3.0, we always had a strict debounce during the transition between having the 10s of Warp Unbound buff, and not having it.
-  - Without this debounce there is a small window where you can input peril generating attacks, causing an explosion.
-  - Version 3.0+ doesnt have this debounce, so there is a small risk of exploding.
-  - Advantage of not having the debounce is that if you are way below your peril-threshold, you can hold down keys (smiting, charging attacks) without the debounce interrupting your input.
-  - Drawback is the risk of exploding.
-  - I have not found a elegant fix to this issue yet.
-
+  - When exiting Warp Unbound, there is a small delay before the peril threshold will properly block peril-generating inputs again, risking the user of exploding.
+  - While not perfect, we have added an option to enable a debounce during this duration, blocking peril-generating inputs.
+- **Duelling Sword parry can cause explosion**
+  - Duelling sword's parry may still cause explosions from the generated peril. Currently we are not considering Duelling Sword's parry as a peril generating attack as it might be smarter to be able to parry even if it means exploding.
+  - In future version I might add an option to toggle if duelling sword's parry is considering a perilous attack. 
 
 ## **Versions older than 3.0 had the following features**
 - **Warp Unbound Talent Bug Hotfix option (Bug now fixed)**

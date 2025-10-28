@@ -8,6 +8,9 @@ _By a psyker, for the psykers_
   - Prevents perils-of-the-warp explosions by disabling additional peril generating inputs when exceeding a user determined peril-threshold.
 - **Controlled explosions for Crystalline Will talent**
   - Option to allow the player to bypass the peril threshold, and thus allow the user to explode, if there are killable elites within the explosion radius, and if Crystalline will is equipped. (For suicide bomber builds)
+
+## **Requirements**
+- **Only DMF**
  
 ## **Bugs**
 - **Exiting Warp Unbound risk of explosion**
